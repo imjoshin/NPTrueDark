@@ -1,0 +1,25 @@
+{
+	"name": "NP True Dark",
+	"version": "1.0",
+	"description": "Enabled True Dark mode for Neptune's Pride games.",
+	"permissions": [
+		"tabs",
+		"storage",
+		"*://*.np.ironhelmet.com/game/*"
+	],
+	"content_scripts": [
+		{
+			"run_at": "document_end",
+			"matches": ["*://*.np.ironhelmet.com/game/*"],
+			"js": [
+				"assets/js/jquery-3.3.1.min.js",
+				"assets/js/inject.js"
+			]
+		}
+	],
+	"browser_action": {
+		"default_icon": "assets/img/icon.png",
+		"default_popup": "popup.html"
+	},
+	"manifest_version": 2
+}
