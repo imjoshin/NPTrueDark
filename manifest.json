@@ -18,8 +18,7 @@
 		}
 	],
 	"browser_action": {
-		"default_icon": "assets/img/icon.png",
-		"default_popup": "popup.html"
+		"default_icon": "assets/img/icon.png"
 	},
 	"manifest_version": 2
 }
