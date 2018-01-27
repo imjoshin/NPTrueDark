@@ -61,14 +61,14 @@ function init() {
 	menuItems.intel = $('.icon-chart-line').parent()[0];
 	menuItems.options = $('.icon-cog-1').parent()[0];
 	menuItems.help = $('.icon-help').parent()[0];
-	hideLeaderboardData();
 
-	$('.player_cell > div:contains(" Stars")').remove(); //will hide aliases if they contains the string ' Stars'
+	// Initially hide data on page load
+	filterLeaderboardData();
 
 	// Leaderboard click handler
 	$(menuItems.leaderboard).on('click', function() {
 		if (window.trueDarkMode) {
-			hideLeaderboardData();
+			filterLeaderboardData();
 		}
 	});
 
@@ -122,12 +122,30 @@ function hideIntelData() {
 	//TODO gotta add hiding after clicking selecting from the select box
 }
 
-function hideLeaderboardData() {
+function filterLeaderboardData() {
+	// Hide star count on each player
 	$('.player_cell > div:contains(" Stars")').remove();
-	knockedOutPlayers = $('.player_cell > .section_title.txt_ellipsis:contains("(KO)")');
 
+	// Hide 'KO' from dead players
+	knockedOutPlayers = $('.player_cell > .section_title.txt_ellipsis:contains("(KO)")');
 	knockedOutPlayers.each(function(key, player) {
 		name = $(player).text().replace("(KO)", "");
 		$(player).text(name);
 	});
+
+	// Sort leaderboard
+	var leaderboard = $('.player_cell').parent();
+	$(leaderboard).append($(".player_cell").get().sort(function(a, b) {
+		var regex = /pci_48_[0-9]+/gi;
+
+		var aIcon = $(a).find('[class*=pci_48_]');
+		var aMatch = $(aIcon).attr('class').match(regex);
+		var aId = aMatch[0].replace('pci_48_', '');
+
+		var bIcon = $(b).find('[class*=pci_48_]');
+		var bMatch = $(bIcon).attr('class').match(regex);
+		var bId = bMatch[0].replace('pci_48_', '');
+
+		return parseInt(aId) - parseInt(bId);
+	}));
 }
