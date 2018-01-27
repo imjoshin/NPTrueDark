@@ -43,6 +43,7 @@ function init() {
 	menuItems.intel = $('.icon-chart-line').parent()[0];
 	menuItems.options = $('.icon-cog-1').parent()[0];
 	menuItems.help = $('.icon-help').parent()[0];
+	menuItems.player = $('.icon-eye').closest('.button');
 
 	// Initially hide data on page load
 	leaderboard();
@@ -57,10 +58,17 @@ function init() {
 	// Intel click handler
 	$(menuItems.intel).on('click', function() {
 		if (window.trueDarkMode) {
-			waitForLoad('div.col_base div.screen_title:contains("Intel")', hideIntelData);
+			waitForLoad('div.col_base div.screen_title:contains("Intel")', intel);
 		}
 	});
 
 	// Options click handler
 	$(menuItems.options).on('click', options);
+
+
+	$(menuItems.player).on('click', function() {
+		if (window.trueDarkMode) {
+			alert("player view");
+		}
+	});
 }
