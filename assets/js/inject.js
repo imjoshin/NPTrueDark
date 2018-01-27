@@ -16,6 +16,7 @@ var menuItems = {
 
 $(function() {
 	gameId = getGameId();
+	trueDarkModeLoop();
 
 	// Check if this game ID is a true dark game
 	if (gameId !== null) {
@@ -61,19 +62,24 @@ function init() {
 	menuItems.options = $('.icon-cog-1').parent()[0];
 	menuItems.help = $('.icon-help').parent()[0];
 
+	$('.player_cell > div:contains(" Stars")').remove(); //will hide aliases if they contains the string ' Stars'
+
 	// Leaderboard click handler
 	$(menuItems.leaderboard).on('click', function() {
-		$('.player_cell > div:contains(" Stars")').remove(); //will hide aliases if they contains the string ' Stars'
-		chrome.storage.sync.get(null, function (data) { console.info(data) });
+		if (window.trueDarkMode) {
+			$('.player_cell > div:contains(" Stars")').remove(); //will hide aliases if they contains the string ' Stars'
+		}
+	});
+
+	$(menuItems.intel).on('click', function() {
+		waitForLoad('div.col_base div.screen_title:contains("Intel")', hideIntelData);
 	});
 
 	// Options click handler
-	$(menuItems.options).on('click', function() {
-		getTrueDarkMode(optionsHandler)
-	});
+	$(menuItems.options).on('click', optionsHandler);
 }
 
-function optionsHandler(isTrueDark) {
+function optionsHandler() {
 	var settingHeight = 48;
 	var interfaceLabel = getElementsByInnerHtml('.section_title', 'Interface')[0];
 	var interfaceSettings = $(interfaceLabel).parent();
@@ -82,11 +88,11 @@ function optionsHandler(isTrueDark) {
 	var trueDarkLabel = interfaceSettings.children('.pad12').eq(0).clone();
 	trueDarkLabel.text('True Dark').removeClass('col_accent').addClass('col_base');
 	var trueDarkOption = interfaceSettings.children('.drop_down').eq(0).clone();
-	trueDarkOption.find('.drop_down_text').text(isTrueDark ? 'Enabled' : 'Disabled');
+	trueDarkOption.find('.drop_down_text').text(window.trueDarkMode ? 'Enabled' : 'Disabled');
 	var trueDarkSelect = trueDarkOption.children('select').empty();
 	trueDarkSelect.addClass('true_dark_select');
-	trueDarkSelect.append('<option value="disabled" ' + (isTrueDark ? '' : 'selected') + '>Disabled</option>');
-	trueDarkSelect.append('<option value="enabled" ' + (isTrueDark ? 'selected' : '') + '>Enabled</option>');
+	trueDarkSelect.append('<option value="enabled" ' + (window.trueDarkMode ? 'selected' : '') + '>Enabled</option>');
+	trueDarkSelect.append('<option value="disabled" ' + (window.trueDarkMode ? '' : 'selected') + '>Disabled</option>');
 
 	// Expand the image
 	interfaceSettings.children('.rel[src]').css('height', '290px');
@@ -107,14 +113,4 @@ function optionsHandler(isTrueDark) {
 		$(this).parent().children('.drop_down_text').text($(selected).text());
 		setTrueDarkMode($(selected).text() == 'Enabled');
 	});
-
-	$(menuItems.intel).on('click', function() {
-		alert('intel');
-		waitForLoad('div.col_base div.screen_title:contains("Intel")', hideIntelData);
-		alert('loaded');
-	});
-}
-
-function hideIntelData() {
-	$( "div.button_text:contains('None')").parent().parent().remove();
 }
