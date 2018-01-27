@@ -36,7 +36,6 @@ $(function() {
  * @returns {void}
  */
 function waitForLoad() {
-	console.log("Checking: " + $('.icon-menu').length);
 	setTimeout(
 		function() {
 			if ($('.icon-menu').length == 0) {
