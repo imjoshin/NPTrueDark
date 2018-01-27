@@ -1,4 +1,22 @@
 /**
+ * Waits for an element to be rendered to the DOM.
+ *
+ * @return {void}
+ */
+function waitForLoad(selector, exitFunction) {
+	setTimeout(
+		function() {
+			if ($(selector).length == 0) {
+				waitForLoad(selector, exitFunction);
+			} else {
+				exitFunction();
+			}
+		},
+		200
+	);
+}
+
+/**
  * Set true dark to be true or false.
  *
  * @param {boolean} bool Boolean to set true dark.
@@ -45,13 +63,4 @@ function getGameId() {
 	}
 
 	return viewIds[0].replace('game/', '');
-}
-
-/**
- * Hides intel data on the intel panel.
- *
- * @return {void}
- */
-function hideIntelData() {
-	$( "div.button_text:contains('None')").parent().parent().remove();
 }

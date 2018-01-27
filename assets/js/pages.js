@@ -1,89 +1,12 @@
-var menuItems = {
-	'compass': null,
-	'zoom_in': null,
-	'zoom_out': null,
-	'home': null,
-	'ruler': null,
-	'quick_upgrade': null,
-	'bulk_upgrade': null,
-	'leaderboard': null,
-	'research': null,
-	'galaxy': null,
-	'intel': null,
-	'options': null,
-	'help': null,
-}
-
-$(function() {
-	gameId = getGameId();
-	trueDarkModeLoop();
-
-	// Check if this game ID is a true dark game
-	if (gameId !== null) {
-		waitForLoad('.icon-menu', init);
-	}
-});
-
 /**
- * Waits for menu to be rendered to the DOM.
+ * Handles the options.
+ *  - Adds a 'True Dark' option to the interface section
  *
- * @returns {void}
+ * @return {void}
  */
-function waitForLoad(selector, exitFunction) {
-	setTimeout(
-		function() {
-			if ($(selector).length == 0) {
-				waitForLoad(selector, exitFunction);
-			} else {
-				exitFunction();
-			}
-		},
-		200
-	);
-}
-
-/**
- * Sets up listeners.
- *
- * @returns {void}
- */
-function init() {
-	menuItems.compass = $('.icon-compass').parent()[0];
-	menuItems.zoom_in = $('.icon-zoom-in').parent()[0];
-	menuItems.zoom_out = $('.icon-zoom-out').parent()[0];
-	menuItems.home = $('.icon-home').parent()[0];
-	menuItems.ruler = $('.icon-myspace').parent()[0];
-	menuItems.quick_upgrade = $('.icon-flash').parent()[0];
-	menuItems.bulk_upgrade = $('.icon-dollar').parent()[1];
-	menuItems.leaderboard = $('.icon-users').parent()[0];
-	menuItems.research = $('.icon-beaker').parent()[0];
-	menuItems.galaxy = $('.icon-star-1').parent()[0];
-	menuItems.intel = $('.icon-chart-line').parent()[0];
-	menuItems.options = $('.icon-cog-1').parent()[0];
-	menuItems.help = $('.icon-help').parent()[0];
-
-	// Initially hide data on page load
-	filterLeaderboardData();
-
-	// Leaderboard click handler
-	$(menuItems.leaderboard).on('click', function() {
-		if (window.trueDarkMode) {
-			filterLeaderboardData();
-		}
-	});
-
-	// Intel click handler
-	$(menuItems.intel).on('click', function() {
-		waitForLoad('div.col_base div.screen_title:contains("Intel")', hideIntelData);
-	});
-
-	// Options click handler
-	$(menuItems.options).on('click', optionsHandler);
-}
-
-function optionsHandler() {
+function options() {
 	var settingHeight = 48;
-	var interfaceLabel = getElementsByInnerHtml('.section_title', 'Interface')[0];
+	var interfaceLabel = $( ".section_title:contains('Interface')");
 	var interfaceSettings = $(interfaceLabel).parent();
 
 	// Create new button
@@ -117,12 +40,26 @@ function optionsHandler() {
 	});
 }
 
-function hideIntelData() {
-	$( "div.button_text:contains('None')").parent().parent().remove();
+/**
+ * Handles the intel graphs.
+ *  - Hides buttons to show other players
+ *
+ * @return {void}
+ */
+function intel() {
+	$("div.button_text:contains('None')").parent().parent().remove();
 	//TODO gotta add hiding after clicking selecting from the select box
 }
 
-function filterLeaderboardData() {
+/**
+ * Handles the leaderboard.
+ *  - Hides star count
+ *  - Hides KO status
+ *  - Sorts leaderboard
+ *
+ * @return {void}
+ */
+function leaderboard() {
 	// Hide star count on each player
 	$('.player_cell > div:contains(" Stars")').remove();
 
