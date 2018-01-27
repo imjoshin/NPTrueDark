@@ -25,7 +25,7 @@ function waitForLoad(selector, exitFunction) {
 function setTrueDarkMode(bool) {
 	chrome.storage.sync.get('np_true_dark', function(data) {
 		var games = data['np_true_dark'];
-		games[getGameId()] = bool;
+		games[getGameId()]  = bool;
 		window.trueDarkMode = bool;
 		chrome.storage.sync.set({'np_true_dark': games}, function() {
 			// Do nothing
@@ -42,8 +42,17 @@ async function trueDarkModeLoop() {
 	setTimeout(function() {
 		chrome.storage.sync.get('np_true_dark', function(data) {
 			var games = data['np_true_dark'];
-			var bool = games[getGameId()] != undefined && games[getGameId()];
-			window.trueDarkMode = bool;
+      if (games != undefined){
+				var bool = games[getGameId()] != undefined && games[getGameId()];
+				window.trueDarkMode = bool;
+			}else{
+				gameId = getGameId();
+	      games = {};
+				games[gameId] = false;
+				chrome.storage.sync.set({'np_true_dark': games}, function() {
+					// Do nothing
+				});
+			}
 		});
 		trueDarkModeLoop();
 	}, 1000);
