@@ -15,17 +15,10 @@ var menuItems = {
 }
 
 $(function() {
-	// TODO get game IDs from chrome.storage
-	var gameIds = [
-		'5201488956882944'
-	];
-
-	// Get game ID in url
-	var regex = /game\/[0-9]{15,}/gi;
-	var viewId = window.location.href.match(regex);
+	gameId = getGameId();
 
 	// Check if this game ID is a true dark game
-	if (viewId !== null && viewId.length && gameIds.indexOf(viewId[0].replace('game/', '')) >= 0) {
+	if (gameId !== null) {
 		waitForLoad();
 	}
 });
@@ -70,6 +63,47 @@ function init() {
 
 	// Leaderboard click handler
 	$(menuItems.leaderboard).on('click', function() {
-		alert('leaderboard');
+		chrome.storage.sync.get(null, function (data) { console.info(data) });
+	});
+
+	// Options click handler
+	$(menuItems.options).on('click', function() {
+		getTrueDarkMode(optionsHandler)
+	});
+}
+
+function optionsHandler(isTrueDark) {
+	var settingHeight = 48;
+	var interfaceLabel = getElementsByInnerHtml('.section_title', 'Interface')[0];
+	var interfaceSettings = $(interfaceLabel).parent();
+
+	// Create new button
+	var trueDarkLabel = interfaceSettings.children('.pad12').eq(0).clone();
+	trueDarkLabel.text('True Dark').removeClass('col_accent').addClass('col_base');
+	var trueDarkOption = interfaceSettings.children('.drop_down').eq(0).clone();
+	trueDarkOption.find('.drop_down_text').text(isTrueDark ? 'Enabled' : 'Disabled');
+	var trueDarkSelect = trueDarkOption.children('select').empty();
+	trueDarkSelect.addClass('true_dark_select');
+	trueDarkSelect.append('<option value="disabled" ' + (isTrueDark ? '' : 'selected') + '>Disabled</option>');
+	trueDarkSelect.append('<option value="enabled" ' + (isTrueDark ? 'selected' : '') + '>Enabled</option>');
+
+	// Expand the image
+	interfaceSettings.children('.rel[src]').css('height', '290px');
+
+	// Make room for new setting
+	interfaceSettings.css('height', (parseInt(interfaceSettings.css('height')) + settingHeight) + 'px');
+	interfaceSettings.children('.pad12, .drop_down').each(function(key, element) {
+		$(element).css('top', (parseInt($(element).css('top')) + settingHeight) + 'px');
+	});
+
+	// Add setting to page
+	interfaceSettings.append(trueDarkLabel);
+	interfaceSettings.append(trueDarkOption);
+
+	// Handle select on change
+	$('.true_dark_select').off('change').on('change', function() {
+		var selected = $(this).find("option:selected");
+		$(this).parent().children('.drop_down_text').text($(selected).text());
+		setTrueDarkMode($(selected).text() == 'Enabled');
 	});
 }

@@ -13,6 +13,7 @@
 			"matches": ["*://*.np.ironhelmet.com/game/*"],
 			"js": [
 				"assets/js/jquery-3.3.1.min.js",
+				"assets/js/util.js",
 				"assets/js/inject.js"
 			]
 		}
