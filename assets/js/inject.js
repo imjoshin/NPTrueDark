@@ -19,7 +19,7 @@ $(function() {
 
 	// Check if this game ID is a true dark game
 	if (gameId !== null) {
-		waitForLoad();
+		waitForLoad('.icon-menu', init);
 	}
 });
 
@@ -28,13 +28,13 @@ $(function() {
  *
  * @returns {void}
  */
-function waitForLoad() {
+function waitForLoad(selector, exitFunction) {
 	setTimeout(
 		function() {
-			if ($('.icon-menu').length == 0) {
-				waitForLoad();
+			if ($(selector).length == 0) {
+				waitForLoad(selector, exitFunction);
 			} else {
-				init();
+				exitFunction();
 			}
 		},
 		200
@@ -63,6 +63,7 @@ function init() {
 
 	// Leaderboard click handler
 	$(menuItems.leaderboard).on('click', function() {
+		$('.player_cell > div:contains(" Stars")').remove(); //will hide aliases if they contains the string ' Stars'
 		chrome.storage.sync.get(null, function (data) { console.info(data) });
 	});
 
@@ -106,4 +107,14 @@ function optionsHandler(isTrueDark) {
 		$(this).parent().children('.drop_down_text').text($(selected).text());
 		setTrueDarkMode($(selected).text() == 'Enabled');
 	});
+
+	$(menuItems.intel).on('click', function() {
+		alert('intel');
+		waitForLoad('div.col_base div.screen_title:contains("Intel")', hideIntelData);
+		alert('loaded');
+	});
+}
+
+function hideIntelData() {
+	$( "div.button_text:contains('None')").parent().parent().remove();
 }
