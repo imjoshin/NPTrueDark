@@ -67,19 +67,30 @@ function init() {
 	menuItems.intel = $('.icon-chart-line').parent()[0];
 	menuItems.options = $('.icon-cog-1').parent()[0];
 	menuItems.help = $('.icon-help').parent()[0];
+	hideLeaderboardData();
 
 	// Leaderboard click handler
 	$(menuItems.leaderboard).on('click', function() {
-		$('.player_cell > div:contains(" Stars")').remove(); //will hide aliases if they contains the string ' Stars'
+		 hideLeaderboardData();
 	});
 	$(menuItems.intel).on('click', function() {
-		alert('intel');
 		waitForLoad('div.col_base div.screen_title:contains("Intel")', hideIntelData);
-		alert('loaded');
-
 	});
 }
 
 function hideIntelData() {
   $( "div.button_text:contains('None')").parent().parent().remove();
+	//TODO gotta add hiding after clicking selecting from the select box
+}
+
+function hideLeaderboardData() {
+	$( "img[src*='images/avatars']" ).remove();
+  $('.player_cell > div:contains(" Stars")').remove();
+  knockedOutPlayers = $('.player_cell > .section_title.txt_ellipsis:contains("(KO)")');
+
+	knockedOutPlayers.each(function(key, player) {
+    name = $(player).text().replace("(KO)", "")
+		$(player).text(name)
+		console.log(name)
+	});
 }
