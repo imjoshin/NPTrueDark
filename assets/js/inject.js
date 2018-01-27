@@ -26,7 +26,7 @@ $(function() {
 
 	// Check if this game ID is a true dark game
 	if (viewId !== null && viewId.length && gameIds.indexOf(viewId[0].replace('game/', '')) >= 0) {
-		waitForLoad('.icon-menu', 'init');
+		waitForLoad('.icon-menu', init);
 	}
 });
 
@@ -41,7 +41,7 @@ function waitForLoad(selector, exitFunction) {
 			if ($(selector).length == 0) {
 				waitForLoad(selector, exitFunction);
 			} else {
-				window[exitFunction]();
+				exitFunction();
 			}
 		},
 		200
@@ -74,7 +74,7 @@ function init() {
 	});
 	$(menuItems.intel).on('click', function() {
 		alert('intel');
-		waitForLoad('div.col_base div.screen_title:contains("Intel")', "hideIntelData")
+		waitForLoad('div.col_base div.screen_title:contains("Intel")', hideIntelData);
 		alert('loaded');
 
 	});
