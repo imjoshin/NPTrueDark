@@ -13,7 +13,9 @@
 			"matches": ["*://*.np.ironhelmet.com/game/*"],
 			"js": [
 				"assets/js/jquery-3.3.1.min.js",
-				"assets/js/inject.js"
+				"assets/js/functions.js",
+				"assets/js/pages.js",
+				"assets/js/app.js"
 			]
 		}
 	],
