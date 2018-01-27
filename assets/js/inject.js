@@ -61,16 +61,18 @@ function init() {
 	menuItems.intel = $('.icon-chart-line').parent()[0];
 	menuItems.options = $('.icon-cog-1').parent()[0];
 	menuItems.help = $('.icon-help').parent()[0];
+	hideLeaderboardData();
 
 	$('.player_cell > div:contains(" Stars")').remove(); //will hide aliases if they contains the string ' Stars'
 
 	// Leaderboard click handler
 	$(menuItems.leaderboard).on('click', function() {
 		if (window.trueDarkMode) {
-			$('.player_cell > div:contains(" Stars")').remove(); //will hide aliases if they contains the string ' Stars'
+			hideLeaderboardData();
 		}
 	});
 
+	// Intel click handler
 	$(menuItems.intel).on('click', function() {
 		waitForLoad('div.col_base div.screen_title:contains("Intel")', hideIntelData);
 	});
@@ -112,5 +114,20 @@ function optionsHandler() {
 		var selected = $(this).find("option:selected");
 		$(this).parent().children('.drop_down_text').text($(selected).text());
 		setTrueDarkMode($(selected).text() == 'Enabled');
+	});
+}
+
+function hideIntelData() {
+	$( "div.button_text:contains('None')").parent().parent().remove();
+	//TODO gotta add hiding after clicking selecting from the select box
+}
+
+function hideLeaderboardData() {
+	$('.player_cell > div:contains(" Stars")').remove();
+	knockedOutPlayers = $('.player_cell > .section_title.txt_ellipsis:contains("(KO)")');
+
+	knockedOutPlayers.each(function(key, player) {
+		name = $(player).text().replace("(KO)", "");
+		$(player).text(name);
 	});
 }
